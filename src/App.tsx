@@ -7,6 +7,8 @@ import Dota from './dota.jpg'
 import Runtera from './runtera.webp'
 import Tactics from './tft.jpg'
 import Go from './go.svg';
+import Info from './info.svg';
+
 
 export const COLORS = {
   navy: '#070120',
@@ -19,6 +21,7 @@ export const COLORS = {
   offWhite: '#fffffb',
   coal: '#232323',
   lightCoal: '#3B3B3B',
+  bgCoal: '#323232',
   yellow: '#FFE769',
   bYellow: '#FFF822'
 }
@@ -55,9 +58,14 @@ const Hamburger = styled('div')`
 `;
 
 const Line = styled('div')`
-  height: 4px;
+  height: 8px;
   background-color: ${COLORS.yellow};
   width: 32px;
+  transform: skewY(-24deg);
+  &:hover {
+    cursor: pointer;
+    background-color: ${COLORS.green};
+  }
 `;
 
 const Search = styled('div')`
@@ -67,7 +75,7 @@ const Search = styled('div')`
   margin : 0 auto;
 `;
 
-const Button = styled('a')`
+const Button = styled('a')<{colors?: Array<string>}>`
   display: flex;
   padding: 8px;
   justify-content: space-between;
@@ -75,9 +83,9 @@ const Button = styled('a')`
   padding-left: 16px;
   font-size: 1.2rem;
   font-weight: bold;
-  color: ${COLORS.offWhite};
+  color: ${(props) => props.colors ? props.colors[0] : COLORS.offWhite};
   align-items: center;
-  background-color: ${COLORS.lightCoal};
+  background-color: ${(props) => props.colors ? props.colors[1] : COLORS.lightCoal};
   border-radius: 4px;
   > img {
     height: 24px;
@@ -116,7 +124,7 @@ const Field = styled('input')`
   }
 `;
 
-const DropDown = styled('div')`
+const DropDown = styled('div')<{padding?: number}>`
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -125,7 +133,7 @@ const DropDown = styled('div')`
   border: 2px solid ${COLORS.yellow};
   border-radius: 4px;
   right: 10%;
-  padding: 16px;
+  padding: ${(props) => props.padding ? props.padding : 16}px;
   > h2, p {
     margin: 0;  
   }
@@ -150,6 +158,9 @@ const Slogan = styled('div')`
   flex-direction: column;
   width: 55%;
   margin : 0 auto;
+  > h3 {
+    color: ${COLORS.white};
+  }
 `;
 
 // color: ${COLORS.offWhite};
@@ -166,14 +177,15 @@ const Games = styled(Search)`
   overflow-x: scroll;
 `
 
-const Card = styled('div')`
-  height: 320px;
+const Card = styled('div')<{disabled?: boolean}>`
+  height: 310px;
   width: 180px;
   margin: 8px;
   color: ${COLORS.offWhite};
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
   border-radius: 4px;
+  filter: ${(props) => props.disabled ? `blur(0.8px) grayscale(0.7) opacity(0.6)` : `none`};
   > img {
     object-fit: cover;
     height: 250px;
@@ -183,7 +195,7 @@ const Card = styled('div')`
   > div {
     padding: 2px 16px;
     border-radius: 4px;
-    > h3 {
+    > h4 {
       margin: 0;
     }
   }
@@ -203,9 +215,61 @@ const Hr = styled('div')<{mutliplier?: number}>`
   background-color: transparent;
 `
 
+const Container = styled('div')<{direction?: string, override?: boolean}>`
+  display: flex;
+  flex-direction: ${(props) => props.direction === 'row' ? `row` : `column`}; 
+  width: 80%;
+  margin : 0 auto;
+  ${(props) =>
+    props.override
+    ? `> h1, h3, p {
+      color: ${COLORS.offWhite};
+      margin: 0;
+    }`
+    : ``  
+  };
+`
+
+const Challenges = styled('div')`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 16px;
+  padding-left: 16px;
+  padding-bottom: 8px;
+  > h3 {
+    color: ${COLORS.offWhite};
+  }
+  > img {
+    height: 24px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+`
+
+const Advert = styled('div')`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  width: 80%;
+  background-color: ${COLORS.bgCoal};
+  border-radius: 4px;
+  color: ${COLORS.offWhite};
+  > h3 > a {
+    color: ${COLORS.green} !important;
+  }
+`;
+
 function App() {
   const [showRegions, setShowRegions] = useState<Boolean>(false);
   const [region, setRegion] = useState<string>("REGION");
+  const [game, setGame] = useState<string>("GAMES");
+  const [showGames, setShowGames] = useState<Boolean>(false);
+  const [role, setRole] = useState<string>("ROLES");
+  const [showRoles, setShowRoles] = useState<Boolean>(false);
+  const [showAdvert, setShowAdvert] = useState<Boolean>(false);
 
   return (
     <div>
@@ -219,9 +283,9 @@ function App() {
       </Nav>
       <Slogan>
         <Logo>G<Span>rounds</Span></Logo>
-        <h2></h2>
+        <h3>Daily challenges</h3>
       </Slogan>
-      <Br mutliplier={4} />
+      <Br mutliplier={2} />
       <Search>
         <Button onClick={() => setShowRegions(!showRegions)}>
           {region}
@@ -243,38 +307,125 @@ function App() {
         <Submit>PLAY <img src={Go} /></Submit>
       </Search>
       <Br mutliplier={2} />
+      <Container>
+        <Logo>G<Span>ames</Span></Logo>
+      </Container>
+      <Br />
       <Games>
         <Card>
           <img src={League} />
           <div>
-            <h3>League of Legends</h3>
+            <h4>League of Legends</h4>
           </div>
         </Card>
-        <Card>
+        <Card disabled>
           <img src={Tactics} />
           <div>
-            <h3>Team fight Tactics</h3>
+            <h4>Team Fight Tactics</h4>
+            <i>coming soon</i>
           </div>
         </Card>
-        <Card>
+        <Card disabled>
           <img src={Runtera} />
           <div>
-            <h3>Legends of Runtera</h3>
+            <h4>Legends of Rune...</h4>
+            <i>coming soon</i>
           </div>
         </Card>
-        <Card>
+        <Card disabled>
           <img src={Valorant} />
           <div>
-            <h3>Valorant</h3>
+            <h4>Valorant</h4>
+            <i>coming soon</i>
           </div>
         </Card>
-        <Card>
+        <Card disabled>
           <img src={Dota} />
           <div>
-            <h3>Dota 2</h3>
+            <h4>Dota 2</h4>
+            <i>coming soon</i>
           </div>
         </Card>
       </Games>
+      <Br />
+      <Container override>
+        <h3>Your game <i>coming soon?</i></h3>
+        <Br />
+        <Button colors={[COLORS.coal, COLORS.yellow]}>Get Invited</Button>
+      </Container>
+      <Br mutliplier={2} />
+      <Container>
+        <Logo>C<Span>hallenges</Span></Logo>
+        {
+          showAdvert
+          ? <Advert>
+            <h2>TOP</h2>
+            <h2>Don't be a Jerry</h2>
+            <p>Jerry's are complicated players. They don't have much of a brain but will die for you.</p>
+            <h2>Your challenge</h2>
+            <p>Play Support or stop dying</p>
+            <h3>Players who use <a href="www.amazon.com">this mouse</a> have better reaction times</h3>
+            <Container direction={"row"}>
+              <Button>Accept</Button>
+              <Button>Decline</Button>
+            </Container>
+          </Advert>
+          : <></>
+        }
+      </Container>
+      <Br mutliplier={2} />
+      <Container direction={"column"} override>
+        <Button onClick={() => setShowGames(!showGames)}>
+          {game}
+          <img src={DownArrow} />
+        </Button>
+        <Br />
+        {
+          showGames
+          ? <DropDown>
+            {
+              !showRoles
+              ? <><h2 onClick={() => setShowGames(!showGames)}>Select</h2>
+                <Item onClick={() => {setGame("LEAGUE OF LEGENDS"); setShowRoles(!showRoles)}}>League of Legends</Item>
+                <Item><i>coming soon...</i></Item></>
+              : <>
+                <h2 onClick={() => setShowGames(!showGames)}>Role</h2>
+                <Item onClick={() => {setRole("TOP"); setShowGames(!showGames); setShowRoles(!showRoles)}}>TOP</Item>
+                <Item onClick={() => {setRole("JUNGLE"); setShowGames(!showGames); setShowRoles(!showRoles)}}>JUNGLE</Item>
+                <Item onClick={() => {setRole("MID"); setShowGames(!showGames); setShowRoles(!showRoles)}}>MID</Item>
+                <Item onClick={() => {setRole("ADC"); setShowGames(!showGames); setShowRoles(!showRoles)}}>ADC</Item>
+                <Item onClick={() => {setRole("SUPPORT"); setShowGames(!showGames); setShowRoles(!showRoles)}}>SUPPORT</Item>
+              </>
+            }
+            </DropDown>
+          : <></>
+        }
+        {
+          role !== "ROLES"
+          ? <>
+            <h1>{role}</h1>
+            <Br />
+            <Challenges>
+              <h3>Don't be a Jerry</h3>
+              <img src={Info} onClick={() => setShowAdvert(!showAdvert)}/>
+            </Challenges>
+            <Challenges>
+              <h3>Show me what you goooot</h3>
+              <img src={Info} />
+            </Challenges>
+            <Challenges>
+              <h3>Never gonna die</h3>
+              <img src={Info} />
+            </Challenges>
+            <Challenges>
+              <h3>John Wick</h3>
+              <img src={Info} />
+            </Challenges>
+          </>
+          : <></>
+        }
+      </Container>
+      <Br mutliplier={10} />
     </div>
   );
 }
