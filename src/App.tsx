@@ -1,53 +1,24 @@
-import { styled } from 'goober';
-import { useState } from 'react';
+import {styled} from 'goober';
+import Icon from './profile.jpg'
 import DownArrow from './downArrow.svg';
-import League from './league.jpg';
-import Valorant from './valorant.webp'
-import Dota from './dota.jpg'
-import Runtera from './runtera.webp'
-import Tactics from './tft.jpg'
-import Go from './go.svg';
-import Info from './info.svg';
-import './App.css'
+import { useState } from 'react';
+import CalendarHeatmap from 'react-calendar-heatmap';
+import 'react-calendar-heatmap/dist/styles.css';
 
 
-export const COLORS = {
-  navy: '#070120',
-  terq: '#177b80',
-  lTerg: '#bef5dd',
-  purple: '#7952EB',
-  orange: '#FF9D3C',
-  dGreen: '#0C5E16',
-  green: '#7AFF7A',
-  red: '#F4270A',
-  white: '#FFFFFF',
-  offWhite: '#fffffb',
-  coal: '#232323',
-  lightCoal: '#3B3B3B',
-  bgCoal: '#323232',
-  lCoal: '#464646',
-  yellow: '#FFE769',
-  bYellow: '#FFF822'
-}
+const COLORS = {
+  white: '#fff',
+  coal: '#232',
+  yellow: '#FFE769'
+};
 
 const Nav = styled('nav')`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  color: ${COLORS.white};
+  color: ${COLORS.coal};
   height: 64px;
-`;
-
-const Logo = styled('div')`
-  display: flex;
-  height: 46px;
-  width: 46px;
-  color: ${COLORS.yellow};
-  font-size: 3rem;
-  font-weight: bold;
-  margin-left: 8px;
-  align-items: center;
 `;
 
 const Hamburger = styled('div')`
@@ -63,7 +34,7 @@ const Hamburger = styled('div')`
 
 const Line = styled('div')`
   height: 8px;
-  background-color: ${COLORS.white};
+  background-color: ${COLORS.coal};
   width: 32px;
   transform: skewY(-24deg);
   &:hover {
@@ -72,12 +43,46 @@ const Line = styled('div')`
   }
 `;
 
-const Search = styled('div')`
+const Logo = styled('h1')`
+  color: ${COLORS.coal};
+  font-size: 1.2rem;
+  font-weight: bold;
+  word-break: break-all;
+  margin-left: 8px;
+`;
+
+const Container = styled('div')<{direction?: string, margin?: number, override?: boolean, overflow?: boolean}>`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${(props) => props.direction === 'column' ? `column` : `row`}; 
   width: 80%;
   margin : 0 auto;
-`;
+  margin-left: ${(props) => props.margin ? props.margin : ``}px;
+  ${(props) =>
+    props.override
+    ? `> h1, h3, h4, p {
+      color: ${COLORS.coal};
+      margin: 0;
+    }`
+    : ``  
+  };
+  ${(props) => props.overflow ? `overflow-x: hidden` : ``};
+`
+
+const Br = styled('div')<{mutliplier?: number}>`
+  height: ${(props) => props.mutliplier ? props.mutliplier * 16 : 16}px;
+`
+
+const Span = styled('span')`
+  color: ${COLORS.coal};
+`
+
+const ProfileIcon = styled('img')`
+  height: 96px;
+  width: 96px;
+  border-radius: 50%;
+  border: 8px solid ${COLORS.coal};
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+`
 
 const Button = styled('a')<{colors?: Array<string>}>`
   display: flex;
@@ -87,9 +92,9 @@ const Button = styled('a')<{colors?: Array<string>}>`
   padding-left: 16px;
   font-size: 1.2rem;
   font-weight: bold;
-  color: ${(props) => props.colors ? props.colors[0] : COLORS.lCoal};
+  color: ${(props) => props.colors ? props.colors[0] : COLORS.coal};
   align-items: center;
-  background-color: ${(props) => props.colors ? props.colors[1] : COLORS.lTerg};
+  background-color: ${(props) => props.colors ? props.colors[1] : COLORS.white};
   border-radius: 4px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   > img {
@@ -99,339 +104,57 @@ const Button = styled('a')<{colors?: Array<string>}>`
     cursor: pointer;
   }
 `;
-
-const Submit = styled(Button)`
-  justify-content: space-between;
-`
-
-const Field = styled('input')`
-  padding: 16px;
-  color: ${COLORS.lCoal};
-  font-size: 1.2rem;
-  font-weight: bold;
-  
-  border:none;
-  background-image:none;
-  background-color: ${COLORS.lTerg};
-  outline: none;
-  transition: box-shadow 0.15s linear;
-  border-radius: 4px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  
-  &:focus {
-    box-shadow: 0 3px 0 ${COLORS.yellow};
-  }
-
-  &::placeholder {
-    color: ${COLORS.coal};
-  }
-`;
-
-const DropDown = styled('div')<{padding?: number}>`
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  background-color: ${COLORS.terq};
-  color: ${COLORS.white};
-  border: 2px solid ${COLORS.lTerg};
-  border-radius: 4px;
-  right: 10%;
-  padding: ${(props) => props.padding ? props.padding : 16}px;
-  > h2, p {
-    margin: 0;  
-  }
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const Item = styled('p')`
-  padding: 2px; 
-  &:hover {
-    background-color: ${COLORS.yellow};
-    border-radius: 2px;
-    color: ${COLORS.coal};
-    font-weight: bold;
-    padding: 2px;
-  }
-`
-
-const Slogan = styled('div')`
-  display: flex;
-  flex-direction: column;
-  width: 55%;
-  margin : 0 auto;
-  > h3 {
-    color: ${COLORS.white};
-  }
-`;
-
-const Games = styled(Search)`
-  flex-direction: row;
-  overflow-y: hidden;
-  overflow-x: scroll;
-`
-
-const Card = styled('div')<{disabled?: boolean}>`
-  height: 310px;
-  width: 180px;
-  margin: 8px;
-  color: ${COLORS.white};
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
-  border-radius: 4px;
-  filter: ${(props) => props.disabled ? `blur(0.8px) grayscale(0.7) opacity(0.6)` : `none`};
-  > img {
-    object-fit: cover;
-    height: 250px;
-    width: 180px; 
-    border-radius: 4px 4px 0 0;
-  }
-  > div {
-    padding: 2px 16px;
-    border-radius: 4px;
-    > h4 {
-      margin: 0;
-    }
-  }
-`
-
-const Span = styled('span')`
-  color: ${COLORS.offWhite};
-`
-
-const Br = styled('div')<{mutliplier?: number}>`
-  height: ${(props) => props.mutliplier ? props.mutliplier * 16 : 16}px;
-`
-
-const Hr = styled('div')<{mutliplier?: number}>`
-  height: 250px;
-  width: 50px;
-  background-color: transparent;
-`
-
-const Container = styled('div')<{direction?: string, override?: boolean}>`
-  display: flex;
-  flex-direction: ${(props) => props.direction === 'row' ? `row` : `column`}; 
-  width: 80%;
-  margin : 0 auto;
-  ${(props) =>
-    props.override
-    ? `> h1, h3, p {
-      color: ${COLORS.offWhite};
-      margin: 0;
-    }`
-    : ``  
-  };
-`
-
-const Challenges = styled('div')`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-right: 16px;
-  padding-left: 16px;
-  padding-bottom: 8px;
-  > h3 {
-    color: ${COLORS.offWhite};
-  }
-  > img {
-    height: 24px;
-    &:hover {
-      cursor: pointer;
-    }
-  }
-`
-
-const Advert = styled('div')`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  z-index: 999;
-  width: 80%;
-  background-color: ${COLORS.bgCoal};
-  border-radius: 4px;
-  color: ${COLORS.offWhite};
-  > h3 > a {
-    color: ${COLORS.green} !important;
-  }
-`;
-
-const Bg = () => {
-  return <>
-    <div className="bg"></div>
-    <div className="bg bg2"></div>
-    <div className="bg bg3"></div>
-  </>
-}
 
 function App() {
-  const [showRegions, setShowRegions] = useState<Boolean>(false);
-  const [region, setRegion] = useState<string>("REGION");
-  const [game, setGame] = useState<string>("GAMES");
-  const [showGames, setShowGames] = useState<Boolean>(false);
-  const [role, setRole] = useState<string>("ROLES");
-  const [showRoles, setShowRoles] = useState<Boolean>(false);
-  const [showAdvert, setShowAdvert] = useState<Boolean>(false);
+  const [rank, setRank] = useState<string>("QUEUES");
+  const [showRanks, setShowRanks] = useState<Boolean>(false);
 
-  return (
-    <div>
-      <Bg />
-      <Nav>
-        <Logo>G</Logo>
-        <Hamburger>
-          <Line/>
-          <Line/>
-          <Line/>
-        </Hamburger>
-      </Nav>
-      <Slogan>
-        <Logo>G<Span>rounds</Span></Logo>
-        <h3>Daily challenges</h3>
-      </Slogan>
-      <Br mutliplier={2} />
-      <Search>
-        <Button onClick={() => setShowRegions(!showRegions)}>
-          {region}
-          <img src={DownArrow} />
-        </Button>
+  return <>
+    <Nav>
+      <Logo>G</Logo>
+      <h3>$1500</h3>
+      <Hamburger>
+        <Line/>
+        <Line/>
+        <Line/>
+      </Hamburger>
+    </Nav>
+    <Br />
+    <Container>
+      <ProfileIcon src={Icon} />
+      <Container direction={"column"} margin={12} override>
+        <Logo>InsaneDanishDude</Logo>
         <Br />
-        {
-          showRegions
-          ? <DropDown>
-              <h2 onClick={() => setShowRegions(!showRegions)}>Select</h2>
-              <Item onClick={() => {setRegion("NA"); setShowRegions(!showRegions)}}>NA</Item>
-              <Item onClick={() => {setRegion("EUW"); setShowRegions(!showRegions)}}>EUW</Item>
-              <Item onClick={() => {setRegion("EUNE"); setShowRegions(!showRegions)}}>EUNE</Item>
-            </DropDown>
-          : <></>
-        }
-        <Field placeholder="Summoner name"></Field>
-        <Br />
-        <Submit>PLAY <img src={Go} /></Submit>
-      </Search>
-      <Br mutliplier={2} />
-      <Container>
-        <Logo>G<Span>ames</Span></Logo>
+        <h4>GOLD V | LP: 58</h4>
+        <h4>240W 205L | 54%</h4>
       </Container>
-      <Br />
-      <Games>
-        <Card>
-          <img src={League} />
-          <div>
-            <h4>League of Legends</h4>
-          </div>
-        </Card>
-        <Card disabled>
-          <img src={Tactics} />
-          <div>
-            <h4>Team Fight Tactics</h4>
-            <i>coming soon</i>
-          </div>
-        </Card>
-        <Card disabled>
-          <img src={Runtera} />
-          <div>
-            <h4>Legends of Rune...</h4>
-            <i>coming soon</i>
-          </div>
-        </Card>
-        <Card disabled>
-          <img src={Valorant} />
-          <div>
-            <h4>Valorant</h4>
-            <i>coming soon</i>
-          </div>
-        </Card>
-        <Card disabled>
-          <img src={Dota} />
-          <div>
-            <h4>Dota 2</h4>
-            <i>coming soon</i>
-          </div>
-        </Card>
-      </Games>
-      <Br />
-      <Container override>
-        <h3>Your game <i>coming soon?</i></h3>
-        <Br />
-        <Button colors={[COLORS.lCoal, COLORS.yellow]}>Get Invited</Button>
-      </Container>
-      <Br mutliplier={2} />
-      <Container>
-        <Logo>C<Span>hallenges</Span></Logo>
-        {
-          showAdvert
-          ? <Advert>
-            <h2>TOP</h2>
-            <h2>Don't be a Jerry</h2>
-            <p>Jerry's are complicated players. They don't have much of a brain but will die for you.</p>
-            <h2>Your challenge</h2>
-            <p>Play Support or stop dying</p>
-            <h3>Players who use <a href="www.amazon.com">this mouse</a> have better reaction times</h3>
-            <Container direction={"row"}>
-              <Button>Accept</Button>
-              <Button>Decline</Button>
-            </Container>
-          </Advert>
-          : <></>
-        }
-      </Container>
-      <Br mutliplier={2} />
-      <Container direction={"column"} override>
-        <Button onClick={() => setShowGames(!showGames)}>
-          {game}
-          <img src={DownArrow} />
-        </Button>
-        <Br />
-        {
-          showGames
-          ? <DropDown>
-            {
-              !showRoles
-              ? <><h2 onClick={() => setShowGames(!showGames)}>Select</h2>
-                <Item onClick={() => {setGame("LEAGUE OF LEGENDS"); setShowRoles(!showRoles)}}>League of Legends</Item>
-                <Item><i>coming soon...</i></Item></>
-              : <>
-                <h2 onClick={() => setShowGames(!showGames)}>Role</h2>
-                <Item onClick={() => {setRole("TOP"); setShowGames(!showGames); setShowRoles(!showRoles)}}>TOP</Item>
-                <Item onClick={() => {setRole("JUNGLE"); setShowGames(!showGames); setShowRoles(!showRoles)}}>JUNGLE</Item>
-                <Item onClick={() => {setRole("MID"); setShowGames(!showGames); setShowRoles(!showRoles)}}>MID</Item>
-                <Item onClick={() => {setRole("ADC"); setShowGames(!showGames); setShowRoles(!showRoles)}}>ADC</Item>
-                <Item onClick={() => {setRole("SUPPORT"); setShowGames(!showGames); setShowRoles(!showRoles)}}>SUPPORT</Item>
-              </>
-            }
-            </DropDown>
-          : <></>
-        }
-        {
-          role !== "ROLES"
-          ? <>
-            <h1>{role}</h1>
-            <Br />
-            <Challenges>
-              <h3>Don't be a Jerry</h3>
-              <img src={Info} onClick={() => setShowAdvert(!showAdvert)}/>
-            </Challenges>
-            <Challenges>
-              <h3>Show me what you goooot</h3>
-              <img src={Info} />
-            </Challenges>
-            <Challenges>
-              <h3>Never gonna die</h3>
-              <img src={Info} />
-            </Challenges>
-            <Challenges>
-              <h3>John Wick</h3>
-              <img src={Info} />
-            </Challenges>
-          </>
-          : <></>
-        }
-      </Container>
-      <Br mutliplier={10} />
-    </div>
-  );
+    </Container>
+    <Br mutliplier={2} />
+    <Container direction={"column"}>
+      <Button>
+        {rank}
+        <img src={DownArrow} />
+      </Button>
+    </Container>
+    <Br mutliplier={2} />
+    <Container overflow>
+      <CalendarHeatmap
+        startDate={new Date('2016-01-01')}
+        endDate={new Date('2016-04-01')}
+        showOutOfRangeDays={true}
+        values={[
+          { date: '2016-01-01' },
+          { date: '2016-01-22' },
+          { date: '2016-01-30' },
+          { date: '2016-01-20' },
+          { date: '2016-01-19' },
+          { date: '2016-01-15' },
+          { date: '2016-01-30' },
+          // ...and so on
+        ]}
+      />
+    </Container>
+  </>
 }
 
 export default App;
