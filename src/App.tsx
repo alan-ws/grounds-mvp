@@ -8,10 +8,13 @@ import Runtera from './runtera.webp'
 import Tactics from './tft.jpg'
 import Go from './go.svg';
 import Info from './info.svg';
+import './App.css'
 
 
 export const COLORS = {
   navy: '#070120',
+  terq: '#177b80',
+  lTerg: '#bef5dd',
   purple: '#7952EB',
   orange: '#FF9D3C',
   dGreen: '#0C5E16',
@@ -22,6 +25,7 @@ export const COLORS = {
   coal: '#232323',
   lightCoal: '#3B3B3B',
   bgCoal: '#323232',
+  lCoal: '#464646',
   yellow: '#FFE769',
   bYellow: '#FFF822'
 }
@@ -59,12 +63,12 @@ const Hamburger = styled('div')`
 
 const Line = styled('div')`
   height: 8px;
-  background-color: ${COLORS.yellow};
+  background-color: ${COLORS.white};
   width: 32px;
   transform: skewY(-24deg);
   &:hover {
     cursor: pointer;
-    background-color: ${COLORS.green};
+    background-color: ${COLORS.yellow};
   }
 `;
 
@@ -83,10 +87,11 @@ const Button = styled('a')<{colors?: Array<string>}>`
   padding-left: 16px;
   font-size: 1.2rem;
   font-weight: bold;
-  color: ${(props) => props.colors ? props.colors[0] : COLORS.offWhite};
+  color: ${(props) => props.colors ? props.colors[0] : COLORS.lCoal};
   align-items: center;
-  background-color: ${(props) => props.colors ? props.colors[1] : COLORS.lightCoal};
+  background-color: ${(props) => props.colors ? props.colors[1] : COLORS.lTerg};
   border-radius: 4px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   > img {
     height: 24px;
   }
@@ -101,26 +106,24 @@ const Submit = styled(Button)`
 
 const Field = styled('input')`
   padding: 16px;
-  color: ${COLORS.offWhite};
+  color: ${COLORS.lCoal};
   font-size: 1.2rem;
   font-weight: bold;
-
+  
   border:none;
   background-image:none;
-  background-color: ${COLORS.lightCoal};
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
+  background-color: ${COLORS.lTerg};
   outline: none;
   transition: box-shadow 0.15s linear;
   border-radius: 4px;
-
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  
   &:focus {
     box-shadow: 0 3px 0 ${COLORS.yellow};
   }
 
   &::placeholder {
-    color: ${COLORS.offWhite};
+    color: ${COLORS.coal};
   }
 `;
 
@@ -128,9 +131,9 @@ const DropDown = styled('div')<{padding?: number}>`
   display: flex;
   flex-direction: column;
   position: absolute;
-  background-color: ${COLORS.coal};
-  color: ${COLORS.offWhite};
-  border: 2px solid ${COLORS.yellow};
+  background-color: ${COLORS.terq};
+  color: ${COLORS.white};
+  border: 2px solid ${COLORS.lTerg};
   border-radius: 4px;
   right: 10%;
   padding: ${(props) => props.padding ? props.padding : 16}px;
@@ -145,7 +148,7 @@ const DropDown = styled('div')<{padding?: number}>`
 const Item = styled('p')`
   padding: 2px; 
   &:hover {
-    background-color: ${COLORS.bYellow};
+    background-color: ${COLORS.yellow};
     border-radius: 2px;
     color: ${COLORS.coal};
     font-weight: bold;
@@ -163,14 +166,6 @@ const Slogan = styled('div')`
   }
 `;
 
-// color: ${COLORS.offWhite};
-// &:hover {
-//   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-// }
-// > img {
-//   border-radius: 4px 4px 0 0;
-// }
-
 const Games = styled(Search)`
   flex-direction: row;
   overflow-y: hidden;
@@ -181,7 +176,7 @@ const Card = styled('div')<{disabled?: boolean}>`
   height: 310px;
   width: 180px;
   margin: 8px;
-  color: ${COLORS.offWhite};
+  color: ${COLORS.white};
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
   border-radius: 4px;
@@ -262,6 +257,14 @@ const Advert = styled('div')`
   }
 `;
 
+const Bg = () => {
+  return <>
+    <div className="bg"></div>
+    <div className="bg bg2"></div>
+    <div className="bg bg3"></div>
+  </>
+}
+
 function App() {
   const [showRegions, setShowRegions] = useState<Boolean>(false);
   const [region, setRegion] = useState<string>("REGION");
@@ -273,6 +276,7 @@ function App() {
 
   return (
     <div>
+      <Bg />
       <Nav>
         <Logo>G</Logo>
         <Hamburger>
@@ -351,7 +355,7 @@ function App() {
       <Container override>
         <h3>Your game <i>coming soon?</i></h3>
         <Br />
-        <Button colors={[COLORS.coal, COLORS.yellow]}>Get Invited</Button>
+        <Button colors={[COLORS.lCoal, COLORS.yellow]}>Get Invited</Button>
       </Container>
       <Br mutliplier={2} />
       <Container>
