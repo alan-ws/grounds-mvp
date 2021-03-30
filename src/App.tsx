@@ -9,7 +9,9 @@ import 'react-calendar-heatmap/dist/styles.css';
 const COLORS = {
   white: '#fff',
   coal: '#232',
-  yellow: '#FFE769'
+  yellow: '#FFE769',
+  grey: '#909090',
+  green: 'rgb(84, 228, 62)'
 };
 
 const Nav = styled('nav')`
@@ -105,6 +107,70 @@ const Button = styled('a')<{colors?: Array<string>}>`
   }
 `;
 
+const HeatmapContainer = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+`
+const Square = styled('div')<{gradient?: number, hasHover?: boolean}>`
+  height: 25px;
+  width: 25px;
+  background-color: ${(props) =>
+    props.gradient
+    ? COLORS.green : COLORS.grey
+  };
+  opacity: ${props => props.gradient ? props.gradient / 100 : 0.35};
+  margin: 2px;
+  ${props =>
+    props.hasHover
+    ? `&:hover {
+      border: 1px solid ${COLORS.coal};
+      cursor: pointer;
+    }`
+    : ``
+  }
+`;
+
+function Heatmap() {
+  const data: Array<{wL: number, gamesPlayed: number, date: number}> = [
+    {wL: 25, gamesPlayed: 5, date: 1},
+    {wL: 75, gamesPlayed: 4, date: 2},
+    {wL: 50, gamesPlayed: 3, date: 3},
+    {wL: 10, gamesPlayed: 2, date: 4},
+    {wL: 0, gamesPlayed: 1, date: 5},
+    {wL: 100, gamesPlayed: 4, date: 8},
+    {wL: 25, gamesPlayed: 5, date: 9},
+    {wL: 25, gamesPlayed: 6, date: 10},
+    {wL: 50, gamesPlayed: 10, date: 12},
+    {wL: 75, gamesPlayed: 5, date: 13},
+    {wL: 87, gamesPlayed: 7, date: 14},
+    {wL: 22, gamesPlayed: 3, date: 16},
+    {wL: 50, gamesPlayed: 2, date: 17},
+    {wL: 57, gamesPlayed: 1, date: 19},
+  ]
+
+  let dayCounter = 1;
+  let index = 0;
+  let HeatMap = [];
+
+  while (dayCounter <= 20)
+  {
+    if (!data[index] || dayCounter !== data[index].date)
+    {
+      HeatMap.push(<Square />)
+    }
+    else
+    {
+      HeatMap.push(<Square gradient={data[index].wL} hasHover />)
+      index++;
+    }
+    dayCounter++;
+  }
+
+  return <HeatmapContainer>
+    {HeatMap}
+  </HeatmapContainer>
+}
+
 function App() {
   const [rank, setRank] = useState<string>("QUEUES");
   const [showRanks, setShowRanks] = useState<Boolean>(false);
@@ -138,7 +204,8 @@ function App() {
     </Container>
     <Br mutliplier={2} />
     <Container overflow>
-      <CalendarHeatmap
+      <Heatmap />
+      {/* <CalendarHeatmap
         startDate={new Date('2016-01-01')}
         endDate={new Date('2016-04-01')}
         showOutOfRangeDays={true}
@@ -152,7 +219,7 @@ function App() {
           { date: '2016-01-30' },
           // ...and so on
         ]}
-      />
+      /> */}
     </Container>
   </>
 }
