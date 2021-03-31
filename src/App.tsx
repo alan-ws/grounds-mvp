@@ -1,9 +1,9 @@
 import {styled} from 'goober';
 import Icon from './profile.jpg'
 import DownArrow from './downArrow.svg';
+import Info from './info.svg';
 import { useState } from 'react';
-import CalendarHeatmap from 'react-calendar-heatmap';
-import 'react-calendar-heatmap/dist/styles.css';
+
 
 
 const COLORS = {
@@ -45,11 +45,12 @@ const Line = styled('div')`
   }
 `;
 
-const Logo = styled('h1')`
+const Logo = styled('h1')<{small?: boolean, medium?: boolean}>`
   color: ${COLORS.coal};
-  font-size: 1.2rem;
+  font-size: ${props => props.small ? `1.2rem` : props.medium ? `2rem` : `3rem`};
   font-weight: bold;
   word-break: break-all;
+  margin: 0;
   margin-left: 8px;
 `;
 
@@ -64,6 +65,7 @@ const Container = styled('div')<{direction?: string, margin?: number, override?:
     ? `> h1, h3, h4, p {
       color: ${COLORS.coal};
       margin: 0;
+      margin-left: 8px;
     }`
     : ``  
   };
@@ -118,7 +120,7 @@ const Square = styled('div')<{gradient?: number, hasHover?: boolean}>`
     props.gradient
     ? COLORS.green : COLORS.grey
   };
-  opacity: ${props => props.gradient ? props.gradient / 100 : 0.35};
+  opacity: ${props => props.gradient ? props.gradient / 100 : 0.25};
   margin: 2px;
   ${props =>
     props.hasHover
@@ -129,6 +131,87 @@ const Square = styled('div')<{gradient?: number, hasHover?: boolean}>`
     : ``
   }
 `;
+
+// const Thing = () => <svg>
+//   <g fill='#464646'>
+//     <path d="M10,500c0,270.6,219.4,490,490,490c270.6,0,490-219.4,490-490c0-270.6-219.4-490-490-490C229.4,10,10,229.4,10,500z M441.9,500L211,192.4L867.6,500L211,807.6L441.9,500z"/>
+//   </g>
+// </svg>
+
+const Challenges = styled('div')`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 16px;
+  padding-left: 8px;
+  padding-bottom: 8px;
+  > h3 {
+    color: ${COLORS.coal};
+    margin: 0;
+  }
+  > img {
+    height: 24px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+`
+
+function Persona() {
+  const data: {
+    reputation: number, recentReputation: number, nextRank: number, mostPlayed: Array<number>, trophiesEarned: number
+  } = {
+    reputation: 872,
+    recentReputation: 40,
+    nextRank: 92,
+    mostPlayed: [1,2,4],
+    trophiesEarned: 12
+  }
+
+  const PersonaContainer = styled('div')`
+    display: flex;
+  `;
+
+  const InCon = styled('div')`
+    &:last-child {
+      margin-left: 48px;
+    }
+  `;
+  const Badge = styled('div')`
+    display: flex;
+    justify-content: flex-end;
+    padding: 3px;
+    background-color: ${COLORS.green};
+    border-radius: 8px;
+    > p {
+      font-size: 1rem;
+    font-weight: bold;
+    color: ${COLORS.white};
+    margin: 0;
+    margin-right: 16px;
+    }
+  `;
+
+  const Bar = styled('div')<{fill: number}>`
+    height: 40px;
+    width: 100%;
+    background-image: ${(props) => `linear-gradient(90deg, ${COLORS.green} ${props.fill}%, ${COLORS.grey} ${(100 - props.fill)}%`});
+  `
+
+  return <PersonaContainer>
+    <InCon>
+      <Logo small>Reputation</Logo>
+      <Logo>{data.reputation}</Logo>
+      <Badge><p>+{data.recentReputation}</p></Badge>
+    </InCon>
+    <InCon>
+      <Logo small>Next reward</Logo>
+      <Br />
+      <Bar fill={data.nextRank} />
+      <Logo small>reward 1000</Logo>
+    </InCon>
+  </PersonaContainer>
+}
 
 function Heatmap() {
   const data: Array<{wL: number, gamesPlayed: number, date: number}> = [
@@ -154,7 +237,7 @@ function Heatmap() {
 
   while (dayCounter <= 20)
   {
-    if (!data[index] || dayCounter !== data[index].date)
+    if (index >= (data.length -1) || dayCounter !== data[index].date)
     {
       HeatMap.push(<Square />)
     }
@@ -174,11 +257,12 @@ function Heatmap() {
 function App() {
   const [rank, setRank] = useState<string>("QUEUES");
   const [showRanks, setShowRanks] = useState<Boolean>(false);
+  const [showAdvert, setShowAdvert] = useState<Boolean>(false);
 
   return <>
     <Nav>
       <Logo>G</Logo>
-      <h3>$1500</h3>
+      <Logo small>InsaneDanishDude</Logo>
       <Hamburger>
         <Line/>
         <Line/>
@@ -189,38 +273,60 @@ function App() {
     <Container>
       <ProfileIcon src={Icon} />
       <Container direction={"column"} margin={12} override>
-        <Logo>InsaneDanishDude</Logo>
+        <Button>
+          {rank}
+          <img src={DownArrow} />
+        </Button>
         <Br />
         <h4>GOLD V | LP: 58</h4>
         <h4>240W 205L | 54%</h4>
       </Container>
     </Container>
+    <Br />
+    <Container direction={"column"}>
+      <Logo medium>P<Span>ersona</Span></Logo>
+      <Persona />
+      <Br />
+      <Button>Expand</Button>
+    </Container>
+    <Br mutliplier={2} />
+    <Container>
+      <Logo medium>M<Span>atches</Span></Logo>
+    </Container>
+    <Container>
+      <Heatmap />
+    </Container>
     <Br mutliplier={2} />
     <Container direction={"column"}>
-      <Button>
-        {rank}
-        <img src={DownArrow} />
-      </Button>
+      <Logo medium>C<Span>hallenges</Span></Logo>
+      <Br />
+      <Challenges>
+        <h3>Don't be a Jerry</h3>
+        <img src={Info} onClick={() => setShowAdvert(!showAdvert)}/>
+      </Challenges>
+      <Challenges>
+        <h3>Show me what you goooot</h3>
+        <img src={Info} />
+      </Challenges>
+      <Challenges>
+        <h3>Never gonna die</h3>
+        <img src={Info} />
+      </Challenges>
+      <Challenges>
+        <h3>John Wick</h3>
+        <img src={Info} />
+      </Challenges>
     </Container>
     <Br mutliplier={2} />
-    <Container overflow>
-      <Heatmap />
-      {/* <CalendarHeatmap
-        startDate={new Date('2016-01-01')}
-        endDate={new Date('2016-04-01')}
-        showOutOfRangeDays={true}
-        values={[
-          { date: '2016-01-01' },
-          { date: '2016-01-22' },
-          { date: '2016-01-30' },
-          { date: '2016-01-20' },
-          { date: '2016-01-19' },
-          { date: '2016-01-15' },
-          { date: '2016-01-30' },
-          // ...and so on
-        ]}
-      /> */}
+    <Container>
+      <Logo medium>R<Span>ewards</Span></Logo>
     </Container>
+    <Container direction={"column"}>
+      <Logo small>GG<Span> Wallet: </Span>2509</Logo>
+      <Br />
+      <Button>Learn more</Button>
+    </Container>
+    <Br mutliplier={4} />
   </>
 }
 
