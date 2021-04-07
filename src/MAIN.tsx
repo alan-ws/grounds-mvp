@@ -43,7 +43,7 @@ const Logo = styled('div')`
   display: flex;
   height: 46px;
   width: 46px;
-  color: ${COLORS.yellow};
+  color: ${COLORS.white};
   font-size: 3rem;
   font-weight: bold;
   margin-left: 8px;
@@ -87,10 +87,10 @@ const Button = styled('a')<{colors?: Array<string>}>`
   padding-left: 16px;
   font-size: 1.2rem;
   font-weight: bold;
-  color: ${(props) => props.colors ? props.colors[0] : COLORS.lCoal};
+  color: ${(props) => props.colors ? props.colors[0] : '#D3D3D3'};
   align-items: center;
-  background-color: ${(props) => props.colors ? props.colors[1] : COLORS.lTerg};
-  border-radius: 4px;
+  background-color: ${(props) => props.colors ? props.colors[1] : '#303030'};
+  border-radius: 8px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   > img {
     height: 24px;
@@ -106,24 +106,24 @@ const Submit = styled(Button)`
 
 const Field = styled('input')`
   padding: 16px;
-  color: ${COLORS.lCoal};
+  color: #D3D3D3;
   font-size: 1.2rem;
   font-weight: bold;
   
   border:none;
   background-image:none;
-  background-color: ${COLORS.lTerg};
+  background-color: #303030;
   outline: none;
   transition: box-shadow 0.15s linear;
-  border-radius: 4px;
+  border-radius: 8px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   
   &:focus {
-    box-shadow: 0 3px 0 ${COLORS.yellow};
+    box-shadow: 0 3px 0 #5451EA;
   }
 
   &::placeholder {
-    color: ${COLORS.coal};
+    color: #D3D3D3;
   }
 `;
 
@@ -179,8 +179,12 @@ const Card = styled('div')<{disabled?: boolean}>`
   color: ${COLORS.white};
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
-  border-radius: 4px;
+  border-radius: 8px;
   filter: ${(props) => props.disabled ? `blur(0.8px) grayscale(0.7) opacity(0.6)` : `none`};
+  background: rgba( 212, 212, 212, 0.20 );
+  backdrop-filter: blur( 10.0px );
+  -webkit-backdrop-filter: blur( 10.0px );
+  border: 2.5px solid rgba( 255, 255, 255, 0.18 );
   > img {
     object-fit: cover;
     height: 250px;
@@ -189,7 +193,7 @@ const Card = styled('div')<{disabled?: boolean}>`
   }
   > div {
     padding: 2px 16px;
-    border-radius: 4px;
+    border-radius: 8px;
     > h4 {
       margin: 0;
     }
@@ -265,6 +269,16 @@ const Bg = () => {
   </>
 }
 
+const Underline = styled('span')`
+  border-bottom: 4px solid #ee3d23;
+`
+
+const Action = styled('span')<{setColor?: string}>`
+  border: 4px solid ${props => props.setColor ? props.setColor : `#FFF`};
+  width: 23px;
+  border-radius: 8px;
+`
+
 function App() {
   const [showRegions, setShowRegions] = useState<Boolean>(false);
   const [region, setRegion] = useState<string>("REGION");
@@ -278,7 +292,7 @@ function App() {
     <div>
       <Bg />
       <Nav>
-        <Logo>G</Logo>
+        <Logo><Underline>G</Underline></Logo>
         <Hamburger>
           <Line/>
           <Line/>
@@ -293,7 +307,8 @@ function App() {
       <Search>
         <Button onClick={() => setShowRegions(!showRegions)}>
           {region}
-          <img src={DownArrow} />
+          <Action setColor={'#ee3d23'} />
+          {/* <img src={DownArrow} /> */}
         </Button>
         <Br />
         {
@@ -308,7 +323,10 @@ function App() {
         }
         <Field placeholder="Summoner name"></Field>
         <Br />
-        <Submit>PLAY <img src={Go} /></Submit>
+        <Submit>PLAY 
+          <Action setColor={'#ee3d23'} />
+          {/* <img src={Go} /> */}
+        </Submit>
       </Search>
       <Br mutliplier={2} />
       <Container>
@@ -355,7 +373,7 @@ function App() {
       <Container override>
         <h3>Your game <i>coming soon?</i></h3>
         <Br />
-        <Button colors={[COLORS.lCoal, COLORS.yellow]}>Get Invited</Button>
+        <Button colors={['#fff', '#ee3d23']}>Get Invited<Action /></Button>
       </Container>
       <Br mutliplier={2} />
       <Container>
@@ -381,7 +399,8 @@ function App() {
       <Container direction={"column"} override>
         <Button onClick={() => setShowGames(!showGames)}>
           {game}
-          <img src={DownArrow} />
+          <Action setColor={'#ee3d23'} />
+          {/* <img src={DownArrow} /> */}
         </Button>
         <Br />
         {

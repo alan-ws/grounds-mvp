@@ -5,61 +5,16 @@ import Info from './info.svg';
 import { useState } from 'react';
 
 
+
 const COLORS = {
   white: '#fff',
+  coal: '#252525',
   yellow: '#FFE769',
   grey: '#909090',
   green: 'rgb(84, 228, 62)',
   purple: '#6f23a2',
-  red: '#fb432f',
-  coal: '#303030',
-  coal60: '#696969',
-  textD3: '#D3D3D3',
-  textBC: '#BCBCBC'
+  red: '#fb432f'
 };
-
-const Button = styled('a')<{colors?: Array<string>}>`
-  display: flex;
-  padding: 4px;
-  justify-content: space-between;
-  padding-right: 16px;
-  padding-left: 16px;
-  font-size: 24px;
-  font-weight: bold;
-  color: ${COLORS.textD3};
-  align-items: center;
-  background: ${COLORS.coal};
-  border-radius: 8px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const Container = styled('div')<{direction?: string, margin?: number, override?: boolean, overflow?: boolean}>`
-  display: flex;
-  flex-direction: ${(props) => props.direction === 'column' ? `column` : `row`}; 
-  width: 90%;
-  margin : 0 auto;
-  margin-left: ${(props) => props.margin ? props.margin : ``}px;
-  ${(props) =>
-    props.override
-    ? `> h1, h3, h4, p {
-      color: ${COLORS.white};
-      margin: 0;
-      margin-left: 8px;
-    }`
-    : ``  
-  };
-  ${(props) => props.overflow ? `overflow-x: hidden` : ``};
-`
-
-const Action = styled('span')<{setColor?: string}>`
-  background: ${COLORS.coal60};
-  height: 6px;
-  width: 25px;
-  border-radius: 8px;
-`
 
 const Nav = styled('nav')`
   display: flex;
@@ -110,7 +65,23 @@ const Logo = styled('h1')<{small?: boolean, medium?: boolean, default?: boolean}
   }
 `;
 
-
+const Container = styled('div')<{direction?: string, margin?: number, override?: boolean, overflow?: boolean}>`
+  display: flex;
+  flex-direction: ${(props) => props.direction === 'column' ? `column` : `row`}; 
+  width: 80%;
+  margin : 0 auto;
+  margin-left: ${(props) => props.margin ? props.margin : ``}px;
+  ${(props) =>
+    props.override
+    ? `> h1, h3, h4, p {
+      color: ${COLORS.white};
+      margin: 0;
+      margin-left: 8px;
+    }`
+    : ``  
+  };
+  ${(props) => props.overflow ? `overflow-x: hidden` : ``};
+`
 
 const Br = styled('div')<{mutliplier?: number}>`
   height: ${(props) => props.mutliplier ? props.mutliplier * 16 : 16}px;
@@ -131,9 +102,27 @@ const ProfileIcon = styled('img')`
   border: 8px solid ${COLORS.coal};
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 `
-/* Rectangle 47 */
 
-
+const Button = styled('a')<{colors?: Array<string>}>`
+  display: flex;
+  padding: 8px;
+  justify-content: space-between;
+  padding-right: 16px;
+  padding-left: 16px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: ${(props) => props.colors ? props.colors[0] : COLORS.white};
+  align-items: center;
+  background-color: ${(props) => props.colors ? props.colors[1] : COLORS.coal};
+  border-radius: 4px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  > img {
+    height: 24px;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+`;
 
 const HeatmapContainer = styled('div')`
   display: flex;
@@ -183,61 +172,61 @@ const Challenges = styled('div')`
   }
 `
 
-// function Persona() {
-//   const data: {
-//     reputation: number, recentReputation: number, nextRank: number, mostPlayed: Array<number>, trophiesEarned: number
-//   } = {
-//     reputation: 872,
-//     recentReputation: 40,
-//     nextRank: 92,
-//     mostPlayed: [1,2,4],
-//     trophiesEarned: 12
-//   }
+function Persona() {
+  const data: {
+    reputation: number, recentReputation: number, nextRank: number, mostPlayed: Array<number>, trophiesEarned: number
+  } = {
+    reputation: 872,
+    recentReputation: 40,
+    nextRank: 92,
+    mostPlayed: [1,2,4],
+    trophiesEarned: 12
+  }
 
-//   const PersonaContainer = styled('div')`
-//     display: flex;
-//   `;
+  const PersonaContainer = styled('div')`
+    display: flex;
+  `;
 
-//   const InCon = styled('div')`
-//     &:last-child {
-//       margin-left: 48px;
-//     }
-//   `;
-//   const Badge = styled('div')`
-//     display: flex;
-//     justify-content: flex-end;
-//     padding: 3px;
-//     background-color: ${COLORS.green};
-//     border-radius: 8px;
-//     > p {
-//       font-size: 1rem;
-//     font-weight: bold;
-//     color: ${COLORS.white};
-//     margin: 0;
-//     margin-right: 16px;
-//     }
-//   `;
+  const InCon = styled('div')`
+    &:last-child {
+      margin-left: 48px;
+    }
+  `;
+  const Badge = styled('div')`
+    display: flex;
+    justify-content: flex-end;
+    padding: 3px;
+    background-color: ${COLORS.green};
+    border-radius: 8px;
+    > p {
+      font-size: 1rem;
+    font-weight: bold;
+    color: ${COLORS.white};
+    margin: 0;
+    margin-right: 16px;
+    }
+  `;
 
-//   const Bar = styled('div')<{fill: number}>`
-//     height: 40px;
-//     width: 100%;
-//     background-image: ${(props) => `linear-gradient(90deg, ${COLORS.green} ${props.fill}%, ${COLORS.grey} ${(100 - props.fill)}%`});
-//   `
+  const Bar = styled('div')<{fill: number}>`
+    height: 40px;
+    width: 100%;
+    background-image: ${(props) => `linear-gradient(90deg, ${COLORS.green} ${props.fill}%, ${COLORS.grey} ${(100 - props.fill)}%`});
+  `
 
-//   return <PersonaContainer>
-//     <InCon>
-//       <Logo small>Reputation</Logo>
-//       <Logo>{data.reputation}</Logo>
-//       <Badge><p>+{data.recentReputation}</p></Badge>
-//     </InCon>
-//     <InCon>
-//       <Logo small>Next reward</Logo>
-//       <Br />
-//       <Bar fill={data.nextRank} />
-//       <Logo small>reward 1000</Logo>
-//     </InCon>
-//   </PersonaContainer>
-// }
+  return <PersonaContainer>
+    <InCon>
+      <Logo small>Reputation</Logo>
+      <Logo>{data.reputation}</Logo>
+      <Badge><p>+{data.recentReputation}</p></Badge>
+    </InCon>
+    <InCon>
+      <Logo small>Next reward</Logo>
+      <Br />
+      <Bar fill={data.nextRank} />
+      <Logo small>reward 1000</Logo>
+    </InCon>
+  </PersonaContainer>
+}
 
 function Heatmap() {
   const data: Array<{wL: number, gamesPlayed: number, date: number}> = [
@@ -280,32 +269,8 @@ function Heatmap() {
   </HeatmapContainer>
 }
 
-function Persona()
-{
-  const [queue, setQueue] = useState<string>("Queue");
-
-  const QueueDetails = () => {
-    return <Container>
-      <Button>
-        {queue}
-        <Action />
-      </Button>
-    </Container>
-  };
-  const RewardBar = () => {};
-  const TrophyDisplay = () => {
-    return <Container>
-
-    </Container>
-  };
-
-  return <Container>
-
-  </Container>
-}
-
 function App() {
-  const [rank, setRank] = useState<string>("Queues");
+  const [rank, setRank] = useState<string>("QUEUES");
   const [showRanks, setShowRanks] = useState<Boolean>(false);
   const [showAdvert, setShowAdvert] = useState<Boolean>(false);
 
@@ -323,17 +288,22 @@ function App() {
     <Container>
       <ProfileIcon src={Icon} />
       <Container direction={"column"} margin={12} override>
-        
+        <Button>
+          {rank}
+          <img src={DownArrow} />
+        </Button>
         <Br />
+        <h4>GOLD V | LP: 58</h4>
+        <h4>240W 205L | 54%</h4>
       </Container>
     </Container>
     <Br />
-    {/* <Container direction={"column"}>
+    <Container direction={"column"}>
       <Logo medium>P<Span>ersona</Span></Logo>
       <Persona />
       <Br />
       <Button>Expand</Button>
-    </Container> */}
+    </Container>
     <Br mutliplier={2} />
     <Container>
       <Logo medium>M<Span>atches</Span></Logo>
